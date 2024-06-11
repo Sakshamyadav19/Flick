@@ -1,7 +1,11 @@
-import Upload from "@/components/upload";
+'use client'
+import Home from "@/components/home";
+import { io } from "socket.io-client";
 
-export default function Home() {
-  return <div>
-    <Upload />
-  </div>
+export default function Main() {
+  return (
+    <div>
+      <Home />
+    </div>
+  )
 }

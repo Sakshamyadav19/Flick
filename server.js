@@ -8,6 +8,8 @@ const port = 3000;
 const app = next({ dev });
 const handler = app.getRequestHandler();
 
+const Room = new Map();
+
 app.prepare().then(() => {
   const httpServer = createServer(handler);
   const io = new Server(httpServer);
@@ -30,8 +32,13 @@ app.prepare().then(() => {
       console.log('user disconnected');
     });
 
-    socket.on('joinRoom',()=>{
-
+    socket.on('joinRoom',(roomId)=>{
+      if (!Room.has(roomId)) {
+        Room.set(roomId, []);
+      }
+      Room.get(roomId)?.push(socket.id);
+      console.log(`Socket ${socket.id} joined room ${roomId}`);
+      console.log(Room.get(roomId));
     })
 
   });
