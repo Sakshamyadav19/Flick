@@ -7,7 +7,17 @@ const Home = () => {
   const router = useRouter();
   const [roomId, setRoomId] = useState('');
 
-  const handleSendFileClick = () => {
+  function generateRandomString() {
+    var result = "";
+    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    var charactersLength = characters.length;
+    for (var i = 0; i < 5; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
+  const handleJoinRoom = () => {
     if (roomId) {
       router.push(`/send?id=${roomId}`);
     } else {
@@ -15,8 +25,9 @@ const Home = () => {
     }
   };
 
-  const handleReceiveFileClick = () => {
-    router.push('/receive');
+  const handleCreateRoom = () => {
+    const roomId=generateRandomString();
+    router.push(`/send?id=${roomId}`);
   };
 
   return (
@@ -30,17 +41,17 @@ const Home = () => {
       <button
         type="button"
         className="m-4 p-2 border border-black rounded-md"
-        onClick={handleSendFileClick}
+        onClick={handleJoinRoom}
       >
-        Send File
+        Join Room
       </button>
       <br />
       <button
         type="button"
         className="m-4 p-2 border border-black rounded-md"
-        onClick={handleReceiveFileClick}
+        onClick={handleCreateRoom}
       >
-        Receive File
+        Create Room
       </button>
     </div>
   );

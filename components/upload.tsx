@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 const CHUNK_SIZE = 10 * 1024;
-
 const socket: Socket = io('http://localhost:3000/');
 
 export default function Upload() {
@@ -14,10 +13,11 @@ export default function Upload() {
     const [fileName, setFileName] = useState<string>('');
     const [isTransferComplete, setIsTransferComplete] = useState<boolean>(false);
     const searchParams = useSearchParams();
-    let roomId = searchParams.get("id");
+    let roomId = searchParams.get("id") || 'default-room';
 
     useEffect(() => {
-        socket.emit('joinRoom',roomId)
+        socket.emit('joinRoom', roomId);
+
         const socketEventListeners = {
             'receive-file-chunk': handleReceiveFileChunk,
             'file-transfer-complete': handleFileTransferComplete,
@@ -36,10 +36,12 @@ export default function Upload() {
     }, []);
 
     const handleReceiveFileChunk = (chunk: ArrayBuffer) => {
+        console.log('Chunk received on client');
         setReceivedChunks(prevChunks => [...prevChunks, chunk]);
     };
 
     const handleFileTransferComplete = () => {
+        console.log('File transfer complete on client');
         setIsTransferComplete(true);
     };
 
@@ -85,20 +87,16 @@ export default function Upload() {
             const chunk = file.slice(start, start + CHUNK_SIZE);
             start += CHUNK_SIZE;
             console.log('Uploading chunk of size ', CHUNK_SIZE);
-            socket.emit('send-file-chunk', chunk);
+            socket.emit('send-file-chunk', { chunk, roomId });
         }
-        socket.emit('file-transfer-complete');
+        socket.emit('file-transfer-complete', { roomId });
     };
 
     return (
-        <div>
+        <div className='flex flex-col items-center justify-center bg-white p-4 px-4 rounded-md shadow-lg'>
             <input type="file" onChange={handleChange} />
-            {uploadFile && <button onClick={handleFileSend}>Send File</button>}
-            {fileName && (
-                <p>
-                    {isTransferComplete ? 'File transfer complete.' : `Receiving file: ${fileName}`}
-                </p>
-            )}
+            <br></br>
+            {uploadFile && <button className=' border border-black p-2 rounded-md' onClick={handleFileSend}>Send File</button>}
         </div>
     );
 }
