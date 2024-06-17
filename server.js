@@ -13,15 +13,15 @@ const handler = app.getRequestHandler();
 const CHANNEL_NAME = 'fileTransfer';
 
 const redisPublisher = new Redis({
-  host: process.env.REDIS_HOST || '127.0.0.1',
-  port: process.env.REDIS_PORT|| 6379,
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
   username:process.env.REDIS_USER,
   password: process.env.REDIS_PASSWORD || undefined,
 });
 
 const redisSubscriber = new Redis({
-  host: process.env.REDIS_HOST || '127.0.0.1',
-  port: process.env.REDIS_PORT || 6379,
+  host: process.env.REDIS_HOST ,
+  port: process.env.REDIS_PORT ,
   username:process.env.REDIS_USER,
   password: process.env.REDIS_PASSWORD || undefined,
 });
