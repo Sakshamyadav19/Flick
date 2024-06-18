@@ -1,8 +1,8 @@
+require('dotenv').config();
 const { createServer } = require('http');
 const next = require('next');
 const { Server } = require('socket.io');
 const { Redis } = require('ioredis');
-require('dotenv').config();
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = 3000;
